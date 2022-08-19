@@ -7,6 +7,7 @@ import { NavbarComponent } from './component/navbar/navbar.component';
 import { StatisticalComponent } from './views/statistical/statistical.component';
 import { SuccessfulTendererAnalysisComponent } from './views/successful-tenderer-analysis/successful-tenderer-analysis.component';
 import { Page404Component } from './views/page404/page404.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { Page404Component } from './views/page404/page404.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
