@@ -1,229 +1,140 @@
-export interface ApiResponseTenders {
+export type TTenderCompanies = {
+	companies: {
+		ids: string[],
+		names: string[],
+		id_key: { [key:string]: string[] },
+		name_key: { [key:string]: string[] }
+	}
+}
+
+export type TEmptyCompanies = {
+	companies: {
+		ids: [],
+		names: [],
+		id_key: {},
+		name_key: {}
+	}
+}
+
+export type T決標公告 = {
+  brief: {
+    type: '決標公告'
+    title: string,
+  } & TTenderCompanies
+};
+
+export type T定期彙送 = {
+  brief: {
+    type: '定期彙送'
+    title: string,
+  } & TTenderCompanies
+};
+
+export type T公開招標公告 = {
+  brief: {
+    type: '公開招標公告'
+    title: string,
+    category: string,
+  } & TEmptyCompanies
+};
+
+export type T公開招標更正公告 = {
+  brief: {
+    type: '公開招標更正公告'
+    title: string,
+    category: string,
+  } & TEmptyCompanies
+};
+
+export type T無法決標公告 = {
+  brief: {
+    type: '無法決標公告'
+    title: string,
+  } & TEmptyCompanies
+};
+
+export type T更正無法決標公告 = {
+  brief: {
+    type: '更正無法決標公告'
+    title: string,
+  } & TEmptyCompanies
+};
+
+export type T經公開評選或公開徵求之限制性招標公告 = {
+  brief: {
+    type: '經公開評選或公開徵求之限制性招標公告'
+    title: string,
+    category: string,
+  } & TEmptyCompanies
+};
+
+export type T公開取得報價單或企劃書公告 = {
+  brief: {
+    type: '公開取得報價單或企劃書公告'
+    title: string,
+    category: string,
+  } & TEmptyCompanies
+};
+
+export type T公開徵求廠商提供參考資料 = {
+  brief: {
+    type: '公開徵求廠商提供參考資料'
+    title: string,
+  } & TEmptyCompanies
+};
+
+
+//標案公告
+export type TTenderAnnouncement = {
+  date: number,
+  filename: string,
+  job_number: string,
+  unit_id: string,
+  unit_name: string,
+  unit_api_url: string,
+  tender_api_url: string,
+  unit_url: string,
+  url: string
+}
+
+export type TTenderAllBrief = (
+  T決標公告 |
+  T定期彙送 |
+  T公開招標公告 |
+  T公開招標更正公告 |
+  T無法決標公告 |
+  T更正無法決標公告 |
+  T經公開評選或公開徵求之限制性招標公告 |
+  T公開取得報價單或企劃書公告 |
+  T公開徵求廠商提供參考資料
+)
+
+export type TTendersApiResponse = {
   page: number,
   query: string,
-  records: TenderAllProject[],
+  records: (
+    TTenderAllBrief &
+    TTenderAnnouncement
+  )[],
   took: number,
   total_pages: number,
   total_records: number
 }
 
-export type TenderAllProject = TenderProject決標公告 |
-  TenderProject定期彙送 |
-  TenderProject公開招標公告 |
-  TenderProject公開招標更正公告 |
-  TenderProject無法決標公告 |
-  TenderProject更正無法決標公告 |
-  TenderProject經公開評選或公開徵求之限制性招標公告 |
-  TenderProject公開取得報價單或企劃書公告 |
-  TenderProject公開徵求廠商提供參考資料
-
-export type TenderProjectType決標公告 = '決標公告'
-export interface TenderProject決標公告 {
-  date: number,
-  filename: string,
+export type TenderWinnerBrief = {
   brief: {
-    type: TenderProjectType決標公告,
+    type: '決標公告'
     title: string,
-    companies: {
-      ids: string[],
-      names: string[],
-      id_key: object,
-      name_key: object
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
+    company: TenderWinner
+  }
 }
 
-export type TenderProjectType定期彙送 = '定期彙送'
-export interface TenderProject定期彙送 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType定期彙送,
-    title: string,
-    companies: {
-      ids: string[],
-      names: string[],
-      id_key: object,
-      name_key: object
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
+export type TenderWinner = {
+  companyId: string,
+  name: string,
+  codeName: string,
+  codeFullName: string,
+  tenderWinnerFullKey: string,
 }
 
-export type TenderProjectType公開招標公告 = '公開招標公告'
-export interface TenderProject公開招標公告 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType公開招標公告,
-    title: string,
-    category: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
 
-export type TenderProjectType公開招標更正公告 = '公開招標更正公告'
-export interface TenderProject公開招標更正公告 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType公開招標更正公告,
-    title: string,
-    category: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
-
-export type TenderProjectType無法決標公告 = '無法決標公告'
-export interface TenderProject無法決標公告 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType無法決標公告,
-    title: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
-
-export type TenderProjectType更正無法決標公告 = '更正無法決標公告'
-export interface TenderProject更正無法決標公告 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType更正無法決標公告,
-    title: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
-
-export type TenderProjectType經公開評選或公開徵求之限制性招標公告 = '經公開評選或公開徵求之限制性招標公告'
-export interface TenderProject經公開評選或公開徵求之限制性招標公告 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType經公開評選或公開徵求之限制性招標公告,
-    title: string,
-    category: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
-
-export type TenderProjectType公開取得報價單或企劃書公告 = '公開取得報價單或企劃書公告'
-export interface TenderProject公開取得報價單或企劃書公告 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType公開取得報價單或企劃書公告,
-    title: string,
-    category: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
-
-export type TenderProjectType公開徵求廠商提供參考資料 = '公開徵求廠商提供參考資料'
-export interface TenderProject公開徵求廠商提供參考資料 {
-  date: number,
-  filename: string,
-  brief: {
-    type: TenderProjectType公開徵求廠商提供參考資料,
-    title: string,
-    companies: {
-      ids: [],
-      names: [],
-      id_key: {},
-      name_key: {}
-    }
-  },
-  job_number: string,
-  unit_id: string,
-  unit_name: string,
-  unit_api_url: string,
-  tender_api_url: string,
-  unit_url: string,
-  url: string
-}
