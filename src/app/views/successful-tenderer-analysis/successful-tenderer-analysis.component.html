@@ -1,1 +1,18 @@
-<p>successful-tenderer-analysis works!</p>
+<h1 *ngIf="isLoading">loading...</h1>
+<div *ngIf="!isLoading">
+  <p class="analysis-title">
+    <span>搜尋關鍵字：{{ searchKey }}，</span>
+    <span>搜尋頁數：{{ searchPage }}</span>
+  </p>
+  <div class="analysis-buttons-container">
+    <button (click)="sortTenderWinnersByAmount()">金額排序</button>
+  </div>
+  <section class="analysis-result">
+    <ol>
+      <li *ngFor="let item of tenderWinnersByAmount">
+        <p>得標廠商：{{ item.name }}</p>
+        <p>決標金額：{{ item.displayAmount }}</p>
+      </li>
+    </ol>
+  </section>
+</div>

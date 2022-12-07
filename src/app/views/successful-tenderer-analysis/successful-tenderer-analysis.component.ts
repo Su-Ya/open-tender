@@ -1,7 +1,7 @@
 import { TTenderAnnouncement, TTenderAllBrief, T決標公告, TenderWinner, TenderWinnerBrief } from './../../types/api-tenders';
 import { TendersService } from './../../service/tenders.service';
 import { Component, OnInit } from '@angular/core';
-
+import { lastValueFrom } from 'rxjs';
 @Component({
   selector: 'app-successful-tenderer-analysis',
   templateUrl: './successful-tenderer-analysis.component.html',
@@ -10,63 +10,53 @@ import { Component, OnInit } from '@angular/core';
 export class SuccessfulTendererAnalysisComponent implements OnInit {
   constructor(private tendersService: TendersService) { }
 
-  tenders: ( (TTenderAllBrief & TTenderAnnouncement)[] | [] ) = [];
-  tenderProjects: ( (T決標公告 & TTenderAnnouncement)[] | [] ) = [];//決標公告-廠商
-  tenderWinners: ( (TenderWinnerBrief & TTenderAnnouncement)[] | [] ) = [];
-  originTenderWinnersDetail: Array<object> = [];//決標公告-細節
-  tenderWinnersAmount: Array<object> = [];
-  tenderWinnersDetailByAmount: Array<object> = [];
-  sortInfoDataByAmount = {
-    tenderType: '',
-    tenderWinnerFullKey: ''
-  }
+  tenders: any;
+  tenderWinners: any;
+  tenderWinnersByAmount: any;
   searchKey = '輿情';
+  searchPage = 1;
+  isLoading = true;
+
   ngOnInit() {
-    this.tendersService.getTenders({ searchKey: this.searchKey, page: 1 }).subscribe( result => {
+    this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
       this.tenders = result.records;
-      this.tenderProjects = this.get決標公告s(this.tenders);
-      this.tenderWinners = this.getTenderWinners(this.tenderProjects);
-      console.log('>>>>>>> ',this.tenderWinners);
-      this.getAllPublicationOfTender();
-      /*****************************************
-       * 待解問題：
-       * forEach 未跑完，就先執行下面 Fn，
-       * 造成 Fn 裡的 array
-       * riginTenderWinnersDetail 是空的
-      *****************************************/
-      this.sortTenderWinnersDetailByAmount();
+      this.tenderWinners = await this.getTenderWinners(this.tenders);
+      this.isLoading = false;
+      console.log('-----------------------', this.tenderWinners);
 
     });
   }
-
-  get決標公告s( data: (TTenderAllBrief & TTenderAnnouncement)[] ): ( (T決標公告 & TTenderAnnouncement)[] | []) {
-    const result = data.filter( item => item.brief.type === '決標公告' );
-    if(result.length > 0) return result as (T決標公告 & TTenderAnnouncement)[];
-    else return [];
-  }
-
-  getTenderWinners( data: (T決標公告 & TTenderAnnouncement)[] ): (TenderWinnerBrief & TTenderAnnouncement)[] {
-    const winners: (TenderWinnerBrief & TTenderAnnouncement)[] = [];
-    return data.reduce( (res, item)=>{
-      const winnerItem: TenderWinner = this.getTenderWinner(item);
-      const { companies, ...others } = item.brief;
-      res = [
-        ...res,
-        {
-          ...item,
-          brief: {
-            ...others,
-            company: winnerItem
+  async getTenderWinners( data: any ) {
+    const array = [];
+    for (const item of data) {
+      if(item.brief.type === '決標公告') {
+        const winner = await this.getTenderWinner(item);
+        console.log('winner ', winner);
+        const tenderDetail = await this.getTenderDetail(winner);
+        const { displayAmount, amount, detail } = await this.getTenderWinnerDetail(tenderDetail, winner);
+        console.log('winner detail ', detail);
+        array.push(
+          {
+            ...winner,
+            amount,
+            displayAmount,
+            apiResponse: {
+              ...winner.apiResponse,
+              detail
+            }
           }
-        }
-      ]
-      return res;
+        );
 
-    }, winners);
+      }
+
+    }
+
+    return array;
   }
 
-  getTenderWinner( item: (T決標公告 & TTenderAnnouncement) ): TenderWinner {
-    let winner: TenderWinner = {
+  async getTenderWinner( item: any ) {
+    console.log('招標列表 api response', item);
+    let winner = {
       name: '',
       companyId: '',
       codeName: '',
@@ -74,88 +64,76 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
       tenderWinnerFullKey: '',
     };
 
-    item.brief.companies.names.reduce( (res, companyName ) => {
+    item.brief.companies.names.reduce( (res: { name: string; tenderWinnerFullKey: string; companyId: string; codeName: string; codeFullName: string; }, companyName: string ) => {
+      console.log('>>>>> companyName', companyName);
       const tenderWinnerFullKey = item.brief.companies.name_key[companyName][1];
       const tenderResult = tenderWinnerFullKey.split(':')[3];
       if( tenderResult === '得標廠商' ) {
         res.name = companyName;
         res.tenderWinnerFullKey = tenderWinnerFullKey;
+        console.log('>>>>> tenderWinnerFullKey', tenderWinnerFullKey);
 
         // 找得標商 id
         const companyCodeName = item.brief.companies.name_key[companyName][0].split(':')[1];
-        for( const [id, value] of Object.entries(item.brief.companies.id_key)) {
-            const currentCompanyCodeName = value[0].split(':')[1]
+        type TIdKey = {
+          [key: string]: [string]
+        }
+        const idKey: TIdKey = item.brief.companies.id_key;
+        for( const [id, key] of Object.entries(idKey)) {
+          console.log('>>>>> id, key ', id, key);
+          const currentCompanyCodeName = key[0].split(':')[1];
+          console.log(`>>>>> ${currentCompanyCodeName} === ${companyCodeName}, currentCompanyCodeName === companyCodeName` );
 
-            if(currentCompanyCodeName === companyCodeName ) {
-                res.companyId = id;
-                res.codeName = currentCompanyCodeName;
-                res.codeFullName = value[0];
+          if(currentCompanyCodeName === companyCodeName ) {
+              res.companyId = id;
+              res.codeName = currentCompanyCodeName;
+              res.codeFullName = key[0];
 
-            }
+          }
         }
 
       }
       return res;
+    }, winner);
 
-    }, winner)
-    return winner;
+    return {
+      ...winner,
+      apiResponse: item
+    };
   }
 
-  getAllPublicationOfTender() {
-    const lastIdx = this.tenderWinners.length;
-    let counter = 0;
-    this.tenderWinners.forEach( item => {
-      this.tendersService
-        .getPublicationOfTender({
-          unitId: item.unit_id,
-          jobNumber: item.job_number,
-        })
-        .subscribe( result => {
-          this.originTenderWinnersDetail.push(result);
-          this.sortInfoDataByAmount = {
-            tenderType: item.brief.type,
-            tenderWinnerFullKey: item.brief.company.tenderWinnerFullKey
-          }
-          // this.tenderWinnersDetailByAmountHandler(result, this.sortInfoDataByAmount);
-          if(counter === lastIdx) {
-            // return new Promise( (resolve, reject) => resolve('ok') );
-            console.log(counter);
-            console.log(this.originTenderWinnersDetail);
-          }
-
-
-        });
-
-    });
+  async getTenderDetail(winner: any) {
+    return lastValueFrom(this.tendersService
+      .getPublicationOfTender({
+        unitId: winner.apiResponse.unit_id,
+        jobNumber: winner.apiResponse.job_number,
+      })
+    );
   }
 
-  tenderWinnersDetailByAmountHandler(tenderWinnerDetail: any, searchData: any) {
-    const tender = tenderWinnerDetail.records.find( (recordItem: any) => recordItem.brief.type === searchData.tenderType);
-    console.log(tender);
+  async getTenderWinnerDetail(tenderDetail: any, winner: any) {
+    const tenderWinnerDetail = tenderDetail.records.find( (recordItem: any) => recordItem.brief.type === winner.apiResponse.brief.type);
+    console.log('tenderWinnerDetailHandler',tenderWinnerDetail);
+
+    // 找此得標商的決標金額
     const splitKey = ':';
-    let tenderWinnerKeys = searchData.tenderWinnerFullKey.split(splitKey);
+    let tenderWinnerKeys = winner.tenderWinnerFullKey.split(splitKey);
     tenderWinnerKeys.pop();
     const tenderWinnerKey = tenderWinnerKeys.join(splitKey);
     const winnerAmountKey = `${tenderWinnerKey}${splitKey}決標金額`;
-    const amountString = tender.detail[winnerAmountKey];
+    const amountString = tenderWinnerDetail.detail[winnerAmountKey];
     const winnerAmount = Number( amountString.split('元')[0].split(',').join('') );
-    console.log(winnerAmount);
-    this.tenderWinnersDetailByAmount.push({
-      winnerAmount: winnerAmount,
-      ...tenderWinnerDetail
-    });
+
+    return {
+      displayAmount: amountString,
+      amount: winnerAmount,
+      detail: tenderWinnerDetail.detail
+    };
   }
 
-  sortTenderWinnersDetailByAmount() {
-    console.log(this.originTenderWinnersDetail);
-    this.tenderWinnersDetailByAmount = JSON.parse(JSON.stringify(this.originTenderWinnersDetail))
-    console.log(this.tenderWinnersDetailByAmount);
-    // this.tenderWinnersDetailByAmount.sort( (a, b) => b.winnerAmount! - a.winnerAmount! );
-
-    type TTenderWinderDetail = {
-      unit_name: string,
-      records: Array<any>
-    }
+  sortTenderWinnersByAmount() {
+    this.tenderWinnersByAmount = JSON.parse(JSON.stringify(this.tenderWinners));
+    this.tenderWinnersByAmount.sort( (a: { amount: any; }, b: { amount: any; }) => b.amount! - a.amount! );
   }
 
 
