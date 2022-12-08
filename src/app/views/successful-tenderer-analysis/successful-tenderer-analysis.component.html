@@ -10,6 +10,8 @@
   <section class="analysis-result">
     <ol>
       <li *ngFor="let item of tenderWinnersByAmount">
+        <p>標案名稱：{{ item.apiResponse.brief.title }}</p>
+        <p>機關：{{ item.apiResponse.unit_name }}</p>
         <p>得標廠商：{{ item.name }}</p>
         <p>決標金額：{{ item.displayAmount }}</p>
       </li>
