@@ -12,15 +12,17 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
   tenders: any;
   tenderWinners: any;
-  tenderWinnersByAmount: any;
   searchKey = '輿情';
   searchPage = 1;
   isLoading = true;
+  tenderWinnersByAmount: any;
+  tenderWinnersByAmountColumns = ['companyName', 'displayAmount', 'title', 'unitName'];
 
   ngOnInit() {
     this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
       this.tenders = result.records;
       this.tenderWinners = await this.getTenderWinners(this.tenders);
+      this.sortTenderWinnersByAmount();
       this.isLoading = false;
       console.log('-----------------------', this.tenderWinners);
 
