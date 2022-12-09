@@ -9,6 +9,8 @@ import { SuccessfulTendererAnalysisComponent } from './views/successful-tenderer
 import { Page404Component } from './views/page404/page404.component';
 import { HttpClientModule } from '@angular/common/http';
 
+import { AngularMaterialModules } from './plugins/angular-material';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ...AngularMaterialModules
   ],
   providers: [],
   bootstrap: [AppComponent]
