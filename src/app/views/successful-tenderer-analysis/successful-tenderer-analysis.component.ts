@@ -2,11 +2,14 @@ import { TTenderAnnouncement, TTenderAllBrief, T決標公告, TenderWinner, Tend
 import { TendersService } from './../../service/tenders.service';
 import { Component, OnInit } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+
 @Component({
   selector: 'app-successful-tenderer-analysis',
   templateUrl: './successful-tenderer-analysis.component.html',
   styleUrls: ['./successful-tenderer-analysis.component.scss']
 })
+
 export class SuccessfulTendererAnalysisComponent implements OnInit {
   constructor(private tendersService: TendersService) { }
 
@@ -17,6 +20,10 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   isLoading = true;
   tenderWinnersByAmount: any;
   tenderWinnersByAmountColumns = ['companyName', 'displayAmount', 'title', 'unitName'];
+  tabsIndex = Object.freeze({
+    sortByAmount: -1,
+    sortByCount: 1,
+  });
 
   ngOnInit() {
     this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
@@ -136,6 +143,20 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   sortTenderWinnersByAmount() {
     this.tenderWinnersByAmount = JSON.parse(JSON.stringify(this.tenderWinners));
     this.tenderWinnersByAmount.sort( (a: { amount: any; }, b: { amount: any; }) => b.amount! - a.amount! );
+  }
+
+  tabChanged(changeEvent: MatTabChangeEvent): void {
+    console.log('Tab position: ' + changeEvent.tab.position);
+    console.log(this.tenderWinners);
+
+    if(changeEvent.tab.position === this.tabsIndex.sortByAmount) {
+
+    }
+    else if(changeEvent.tab.position === this.tabsIndex.sortByCount) {
+
+    }
+
+
   }
 
 
