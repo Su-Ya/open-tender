@@ -33,7 +33,7 @@ nav {
     color: white;
     text-decoration: none;
   }
-  a:hover {
+  a:hover, .nav-item-active {
     color: #1976d2;
     background-color: white;
     border-radius: .5rem;
