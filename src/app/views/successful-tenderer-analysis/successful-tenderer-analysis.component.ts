@@ -24,6 +24,8 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     sortByAmount: -1,
     sortByCount: 1,
   });
+  tenderWinnersByCount: any;
+  tenderWinnersByCountColumns = ['companyName', 'count'];
 
   ngOnInit() {
     this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
@@ -143,20 +145,50 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   sortTenderWinnersByAmount() {
     this.tenderWinnersByAmount = JSON.parse(JSON.stringify(this.tenderWinners));
     this.tenderWinnersByAmount.sort( (a: { amount: any; }, b: { amount: any; }) => b.amount! - a.amount! );
+    console.log('金額排名：',this.tenderWinnersByAmount);
+
   }
 
   tabChanged(changeEvent: MatTabChangeEvent): void {
-    console.log('Tab position: ' + changeEvent.tab.position);
-    console.log(this.tenderWinners);
-
     if(changeEvent.tab.position === this.tabsIndex.sortByAmount) {
 
     }
     else if(changeEvent.tab.position === this.tabsIndex.sortByCount) {
+      this.sortTenderWinnersByCount();
 
     }
 
+  }
 
+  sortTenderWinnersByCount() {
+    const countResult: {
+      string: number
+    } = this.tenderWinners.reduce((obj: any, item: any)=>{
+      if(item.name in obj) {
+        obj[item.name]++;
+      }
+      else {
+        obj[item.name] = 1
+      }
+      return obj;
+
+    },{});
+
+    const arr: [string, number][] = Object.entries(countResult);
+    this.tenderWinnersByCount = arr
+      .sort( ([, a], [, b]) => b - a)
+      .reduce( (res: {name: String, count: number}[], arrItem) => {
+        res = [
+          ...res,
+          {
+            name: arrItem[0],
+            count: arrItem[1]
+          }
+        ];
+        return res;
+
+      }, []);
+    console.log('得標數排名：',this.tenderWinnersByCount);
   }
 
 
