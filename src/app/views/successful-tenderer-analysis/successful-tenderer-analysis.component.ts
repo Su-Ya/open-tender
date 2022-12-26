@@ -199,11 +199,19 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   countTableRowCurrentDetailHandler() {
     this.countTableCurrentRow = this.tenderWinnersByCount[this.countTableCurrentRowIdx];
     this.countTableCurrentRowDetail = this.tenderWinners.filter( (item: { name: any; }) => this.countTableCurrentRow.name === item.name);
+    console.log('detail: ', this.countTableCurrentRowDetail);
+
   }
 
   changedCountTableCurrentRow(idx: number) {
     this.countTableCurrentRowIdx = idx;
     this.countTableRowCurrentDetailHandler();
+  }
+
+  openTenderDetailPage(item: any) {
+    console.log('openTenderDetailPage: ',item);
+    const url = `https://ronnywang.github.io/pcc-viewer/tender.html?unit_id=${item.apiResponse.unit_id}&job_number=${item.apiResponse.job_number}&date=${item.apiResponse.date}&filename=${item.apiResponse.filename}`;
+    window.open(url, '_blank');
   }
 
 

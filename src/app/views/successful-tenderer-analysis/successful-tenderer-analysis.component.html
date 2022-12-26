@@ -77,7 +77,11 @@
                     <td mat-cell *matCellDef="let item">{{ item.apiResponse.unit_name }}</td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="countTableCurrentRowDetailColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: countTableCurrentRowDetailColumns;"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: countTableCurrentRowDetailColumns; let item"
+                    (click)="openTenderDetailPage(item)"
+                  ></tr>
                 </table>
               </div>
             </section>
