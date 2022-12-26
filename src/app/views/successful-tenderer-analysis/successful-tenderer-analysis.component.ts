@@ -26,6 +26,10 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   });
   tenderWinnersByCount: any;
   tenderWinnersByCountColumns = ['companyName', 'count'];
+  countTableCurrentRowDetailColumns = ['displayAmount', 'title', 'unitName'];
+  countTableCurrentRow: any;
+  countTableCurrentRowIdx = 0;
+  countTableCurrentRowDetail: any;
 
   ngOnInit() {
     this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
@@ -189,7 +193,19 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
       }, []);
     console.log('得標數排名：',this.tenderWinnersByCount);
+    this.countTableRowCurrentDetailHandler();
   }
+
+  countTableRowCurrentDetailHandler() {
+    this.countTableCurrentRow = this.tenderWinnersByCount[this.countTableCurrentRowIdx];
+    this.countTableCurrentRowDetail = this.tenderWinners.filter( (item: { name: any; }) => this.countTableCurrentRow.name === item.name);
+  }
+
+  changedCountTableCurrentRow(idx: number) {
+    this.countTableCurrentRowIdx = idx;
+    this.countTableRowCurrentDetailHandler();
+  }
+
 
 
 
