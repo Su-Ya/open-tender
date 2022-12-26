@@ -39,7 +39,7 @@
           <ng-template matTabContent>
             <section class="sort-count-container">
               <table
-                class="mat-elevation-z8"
+                class="count-table mat-elevation-z8"
                 mat-table
                 [dataSource]="tenderWinnersByCount"
               >
@@ -55,6 +55,7 @@
                 <tr
                   mat-row
                   *matRowDef="let row; columns: tenderWinnersByCountColumns; let idx = index"
+                  [ngClass]="{'actived': countTableCurrentRowIdx === idx}"
                   (click)="changedCountTableCurrentRow(idx)"></tr>
               </table>
               <div class="row-detail">

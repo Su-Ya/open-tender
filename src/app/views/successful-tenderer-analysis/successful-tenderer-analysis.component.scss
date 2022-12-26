@@ -12,5 +12,13 @@
     table {
       height: fit-content;
     }
+    tr {
+      cursor: pointer;
+    }
+    .count-table {
+      tr:hover, .actived {
+        background-color: rgba(#1976d2, .2);
+      }
+    }
   }
 }
