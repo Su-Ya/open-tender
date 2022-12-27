@@ -92,12 +92,18 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
     item.brief.companies.names.reduce( (res: { name: string; tenderWinnerFullKey: string; companyId: string; codeName: string; codeFullName: string; }, companyName: string ) => {
       console.log('>>>>> companyName', companyName);
-      const tenderWinnerFullKey = item.brief.companies.name_key[companyName][1];
-      const tenderResult = tenderWinnerFullKey.split(':')[3];
+
+      const tenderWinnerFullKey = item.brief.companies.name_key[companyName]
+      .find( (str: string) => {
+        if( str.includes('決標品項') && !str.includes('未得標廠商') && str.includes('得標廠商')) return str;
+        else return undefined;
+      });
+      console.log('>>>>> tenderWinnerFullKey', tenderWinnerFullKey);
+
+      const tenderResult = tenderWinnerFullKey?.split(':')[3];
       if( tenderResult === '得標廠商' ) {
         res.name = companyName;
         res.tenderWinnerFullKey = tenderWinnerFullKey;
-        console.log('>>>>> tenderWinnerFullKey', tenderWinnerFullKey);
 
         // 找得標商 id
         const companyCodeName = item.brief.companies.name_key[companyName][0].split(':')[1];
