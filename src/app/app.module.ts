@@ -10,6 +10,7 @@ import { Page404Component } from './views/page404/page404.component';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AngularMaterialModules } from './plugins/angular-material';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { AngularMaterialModules } from './plugins/angular-material';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     ...AngularMaterialModules
   ],
   providers: [],
