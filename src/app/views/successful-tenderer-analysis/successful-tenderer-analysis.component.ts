@@ -19,11 +19,17 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   searchPage = 1;
   isLoading = true;
   tenderWinnersByAmount: any;
-  tenderWinnersByAmountColumns = ['companyName', 'displayAmount', 'title', 'unitName'];
+  tenderWinnersByAmountColumns = ['companyName', 'totalAmount'];
+  amountTableCurrentRowDetailColumns = ['displayAmount', 'title', 'unitName'];
+  amountTableCurrentRow: any;
+  amountTableCurrentRowIdx = 0;
+  amountTableCurrentRowDetail: any;
+
   tabsIndex = Object.freeze({
     sortByAmount: -1,
     sortByCount: 1,
   });
+
   tenderWinnersByCount: any;
   tenderWinnersByCountColumns = ['companyName', 'count'];
   countTableCurrentRowDetailColumns = ['displayAmount', 'title', 'unitName'];
@@ -147,10 +153,46 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   }
 
   sortTenderWinnersByAmount() {
-    this.tenderWinnersByAmount = JSON.parse(JSON.stringify(this.tenderWinners));
-    this.tenderWinnersByAmount.sort( (a: { amount: any; }, b: { amount: any; }) => b.amount! - a.amount! );
-    console.log('金額排名：',this.tenderWinnersByAmount);
+    const countResult: {
+      string: number
+    } = this.tenderWinners.reduce((obj: any, item: any)=>{
+      if(item.name in obj) {
+        obj[item.name] += item.amount;
+      }
+      else {
+        obj[item.name] = item.amount;
+      }
+      return obj;
 
+    },{});
+    const arr: [string, number][] = Object.entries(countResult);
+    this.tenderWinnersByAmount = arr
+      .sort( ([, a], [, b]) => b - a)
+      .reduce( (res: {name: String, totalAmount: number}[], arrItem) => {
+        res = [
+          ...res,
+          {
+            name: arrItem[0],
+            totalAmount: arrItem[1]
+          }
+        ];
+        return res;
+
+      }, []);
+      console.log('金額排名：',this.tenderWinnersByAmount);
+      this.amountTableRowCurrentDetailHandler();
+  }
+
+  amountTableRowCurrentDetailHandler() {
+    this.amountTableCurrentRow = this.tenderWinnersByAmount[this.amountTableCurrentRowIdx];
+    this.amountTableCurrentRowDetail = this.tenderWinners.filter( (item: { name: any; }) => this.amountTableCurrentRow.name === item.name);
+    console.log('detail: ', this.amountTableCurrentRowDetail);
+
+  }
+
+  changedAmountTableCurrentRow(idx: number) {
+    this.amountTableCurrentRowIdx = idx;
+    this.amountTableRowCurrentDetailHandler();
   }
 
   tabChanged(changeEvent: MatTabChangeEvent): void {
