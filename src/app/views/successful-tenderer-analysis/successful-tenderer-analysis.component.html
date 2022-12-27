@@ -8,8 +8,9 @@
         [(ngModel)]="searchPage"
         (keyup.enter)="changedPage($event)"
         [disabled]="isLoading || (tenderWinnersByAmount?.length === 0 && tenderWinnersByCount?.length === 0)"
-      >
+      >，
     </span>
+    <span>總頁數：{{ totalPages }}</span>
   </p>
   <h1 *ngIf="isLoading">loading...</h1>
   <div *ngIf="!isLoading">

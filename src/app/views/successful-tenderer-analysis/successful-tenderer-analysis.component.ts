@@ -17,6 +17,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   tenderWinners: any;
   searchKey = '輿情';
   searchPage = '1';
+  totalPages = 1;
   isLoading = true;
   tenderWinnersByAmount: any;
   tenderWinnersByAmountColumns = ['companyName', 'totalAmount'];
@@ -43,6 +44,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   fetchTenders() {
     this.isLoading = true;
     this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
+      this.totalPages = result.total_pages;
       this.tenders = result.records;
       this.tenderWinners = await this.getTenderWinners(this.tenders);
       this.sortTenderWinnersByAmount();
@@ -260,9 +262,15 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   }
 
   changedPage(event: any) {
-    this.clearTables();
     const value = event.target.value;
     if(value === '') return;
+
+    if(+value > this.totalPages) {
+      alert('超過總頁數');
+      return;
+    }
+
+    this.clearTables();
     this.searchPage = value;
     this.fetchTenders();
   }
