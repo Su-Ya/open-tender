@@ -20,7 +20,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   isLoading = true;
   tenderWinnersByAmount: any;
   tenderWinnersByAmountColumns = ['companyName', 'totalAmount'];
-  amountTableCurrentRowDetailColumns = ['displayAmount', 'title', 'unitName'];
+  amountTableCurrentRowDetailColumns = ['amount', 'title', 'unitName'];
   amountTableCurrentRow: any;
   amountTableCurrentRowIdx = 0;
   amountTableCurrentRowDetail: any;
@@ -32,7 +32,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
   tenderWinnersByCount: any;
   tenderWinnersByCountColumns = ['companyName', 'count'];
-  countTableCurrentRowDetailColumns = ['displayAmount', 'title', 'unitName'];
+  countTableCurrentRowDetailColumns = ['amount', 'title', 'unitName'];
   countTableCurrentRow: any;
   countTableCurrentRowIdx = 0;
   countTableCurrentRowDetail: any;
