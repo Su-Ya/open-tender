@@ -1,7 +1,15 @@
 <section class="analysis">
   <p class="analysis-title">
     <span>搜尋關鍵字：{{ searchKey }}，</span>
-    <span>搜尋頁數：{{ searchPage }}</span>
+    <span>
+      搜尋頁數：
+      <input
+        type="text"
+        [(ngModel)]="searchPage"
+        (keyup.enter)="changedPage($event)"
+        [disabled]="isLoading || (tenderWinnersByAmount?.length === 0 && tenderWinnersByCount?.length === 0)"
+      >
+    </span>
   </p>
   <h1 *ngIf="isLoading">loading...</h1>
   <div *ngIf="!isLoading">

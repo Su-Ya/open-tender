@@ -16,7 +16,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   tenders: any;
   tenderWinners: any;
   searchKey = '輿情';
-  searchPage = 1;
+  searchPage = '1';
   isLoading = true;
   tenderWinnersByAmount: any;
   tenderWinnersByAmountColumns = ['companyName', 'totalAmount'];
@@ -38,13 +38,16 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   countTableCurrentRowDetail: any;
 
   ngOnInit() {
+    this.fetchTenders();
+  }
+  fetchTenders() {
+    this.isLoading = true;
     this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
       this.tenders = result.records;
       this.tenderWinners = await this.getTenderWinners(this.tenders);
       this.sortTenderWinnersByAmount();
       this.isLoading = false;
       console.log('-----------------------', this.tenderWinners);
-
     });
   }
   async getTenderWinners( data: any ) {
@@ -254,6 +257,20 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     console.log('openTenderDetailPage: ',item);
     const url = `https://ronnywang.github.io/pcc-viewer/tender.html?unit_id=${item.apiResponse.unit_id}&job_number=${item.apiResponse.job_number}&date=${item.apiResponse.date}&filename=${item.apiResponse.filename}`;
     window.open(url, '_blank');
+  }
+
+  changedPage(event: any) {
+    this.clearTables();
+    const value = event.target.value;
+    if(value === '') return;
+    this.searchPage = value;
+    this.fetchTenders();
+  }
+  clearTables() {
+    this.tenderWinnersByAmount = [];
+    this.amountTableCurrentRowDetail = [];
+    this.tenderWinnersByCount = [];
+    this.countTableCurrentRowDetail = [];
   }
 
 

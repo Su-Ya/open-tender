@@ -9,7 +9,7 @@ export class TendersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getTenders( data: { searchKey: string, page: number } ) {
+  getTenders( data: { searchKey: string, page: string } ) {
     return this.httpClient.get<TTendersApiResponse>(`https://pcc.g0v.ronny.tw/api/searchbytitle?query=${data.searchKey}&page=${data.page}`)
   }
 
