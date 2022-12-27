@@ -21,7 +21,7 @@
                 </ng-container>
                 <ng-container matColumnDef="totalAmount">
                   <th mat-header-cell *matHeaderCellDef>總金額(元)</th>
-                  <td mat-cell *matCellDef="let item">{{ item.totalAmount.toLocaleString() }}</td>
+                  <td mat-cell *matCellDef="let item" class="text-right">{{ item.totalAmount.toLocaleString() }}</td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="tenderWinnersByAmountColumns"></tr>
                 <tr
@@ -38,7 +38,7 @@
                 >
                   <ng-container matColumnDef="amount">
                     <th mat-header-cell *matHeaderCellDef>決標金額(元)</th>
-                    <td mat-cell *matCellDef="let item">{{ item.amount.toLocaleString() }}</td>
+                    <td mat-cell *matCellDef="let item" class="text-right">{{ item.amount.toLocaleString() }}</td>
                   </ng-container>
                   <ng-container matColumnDef="title">
                     <th mat-header-cell *matHeaderCellDef>標案名稱</th>
@@ -73,7 +73,7 @@
                 </ng-container>
                 <ng-container matColumnDef="count">
                   <th mat-header-cell *matHeaderCellDef>得標數量</th>
-                  <td mat-cell *matCellDef="let item">{{ item.count }}</td>
+                  <td mat-cell *matCellDef="let item" class="text-right">{{ item.count }}</td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="tenderWinnersByCountColumns"></tr>
                 <tr
@@ -90,7 +90,7 @@
                 >
                   <ng-container matColumnDef="amount">
                     <th mat-header-cell *matHeaderCellDef>決標金額(元)</th>
-                    <td mat-cell *matCellDef="let item">{{ item.amount.toLocaleString() }}</td>
+                    <td mat-cell *matCellDef="let item" class="text-right">{{ item.amount.toLocaleString() }}</td>
                   </ng-container>
                   <ng-container matColumnDef="title">
                     <th mat-header-cell *matHeaderCellDef>標案名稱</th>

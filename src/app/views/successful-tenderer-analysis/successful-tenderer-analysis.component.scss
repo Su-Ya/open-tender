@@ -15,10 +15,16 @@
     tr {
       cursor: pointer;
     }
+    th, td {
+      padding: 0 24px;
+    }
     .sort-table {
       tr:hover, .actived {
         background-color: rgba(#1976d2, .2);
       }
     }
+  }
+  .text-right {
+    text-align: right;
   }
 }
