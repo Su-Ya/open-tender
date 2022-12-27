@@ -148,12 +148,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     console.log('tenderWinnerDetailHandler',tenderWinnerDetail);
 
     // 找此得標商的決標金額
-    const splitKey = ':';
-    let tenderWinnerKeys = winner.tenderWinnerFullKey.split(splitKey);
-    tenderWinnerKeys.pop();
-    const tenderWinnerKey = tenderWinnerKeys.join(splitKey);
-    const winnerAmountKey = `${tenderWinnerKey}${splitKey}決標金額`;
-    const amountString = tenderWinnerDetail.detail[winnerAmountKey];
+    const amountString = tenderWinnerDetail.detail['決標資料:總決標金額'];
     const winnerAmount = Number( amountString.split('元')[0].split(',').join('') );
 
     return {
