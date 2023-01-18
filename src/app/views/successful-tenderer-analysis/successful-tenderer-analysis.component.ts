@@ -26,11 +26,6 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   amountTableCurrentRowIdx = 0;
   amountTableCurrentRowDetail: any;
 
-  tabsIndex = Object.freeze({
-    sortByAmount: -1,
-    sortByCount: 1,
-  });
-
   tenderWinnersByCount: any;
   tenderWinnersByCountColumns = ['companyName', 'count'];
   countTableCurrentRowDetailColumns = ['amount', 'title', 'time', 'unitName'];
@@ -209,12 +204,21 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     this.amountTableRowCurrentDetailHandler();
   }
 
+  tabsLabel = Object.freeze({
+    sortByAmount: '金額排名',
+    sortByCount: '得標數排名',
+    sortByMonth: '每月得標',
+  });
   tabChanged(changeEvent: MatTabChangeEvent): void {
-    if(changeEvent.tab.position === this.tabsIndex.sortByAmount) {
+    if(changeEvent.tab.textLabel === this.tabsLabel.sortByAmount) {
 
     }
-    else if(changeEvent.tab.position === this.tabsIndex.sortByCount) {
+    else if(changeEvent.tab.textLabel === this.tabsLabel.sortByCount) {
       this.sortTenderWinnersByCount();
+
+    }
+    else if(changeEvent.tab.textLabel === this.tabsLabel.sortByMonth) {
+      this.tenderWinnersCountByMonth();
 
     }
 
@@ -288,6 +292,44 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     this.amountTableCurrentRowDetail = [];
     this.tenderWinnersByCount = [];
     this.countTableCurrentRowDetail = [];
+  }
+
+  tenderWinnersCountPerMonth: any;
+  perMonthTableColumns = ['month', 'count'];
+  analysisMapByMonth: any;
+  tenderWinnersCountByMonth() {
+    this.analysisMapByMonth = this.tenderWinners.reduce( (mapRes: any, item: any)=>{
+        const times = item.closeTime.split('/');
+        const YYY = times[0];
+        const MM = times[1];
+        const dd = times[2];
+        const mapKey = `${YYY}/${MM}`;
+        if(mapRes.get(mapKey)) {
+            const data = [...mapRes.get(mapKey), item];
+            mapRes.set(mapKey, data);
+
+        }
+        else {
+            const data = [item];
+            mapRes.set(mapKey, data);
+
+        }
+        return mapRes;
+
+    }, new Map());
+
+    this.tenderWinnersCountPerMonth = [...this.analysisMapByMonth.keys()];
+    this.perMonthDetailTable = this.analysisMapByMonth.get(this.tenderWinnersCountPerMonth[0]);
+
+  };
+
+  perMonthDetailTable = [];
+  perMonthDetailTableColumns = ['amount', 'title', 'time', 'unitName'];
+  perMonthTableCurrentRowIdx = 0;
+  changedCountTableCurrentRowByMonth(idx: number, mapKey: string) {
+    this.perMonthTableCurrentRowIdx = idx;
+    this.perMonthDetailTable = this.analysisMapByMonth.get(mapKey);
+
   }
 
 
