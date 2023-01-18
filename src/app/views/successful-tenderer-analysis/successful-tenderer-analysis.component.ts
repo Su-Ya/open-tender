@@ -21,7 +21,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   isLoading = true;
   tenderWinnersByAmount: any;
   tenderWinnersByAmountColumns = ['companyName', 'totalAmount'];
-  amountTableCurrentRowDetailColumns = ['amount', 'title', 'unitName'];
+  amountTableCurrentRowDetailColumns = ['amount', 'title', 'time', 'unitName'];
   amountTableCurrentRow: any;
   amountTableCurrentRowIdx = 0;
   amountTableCurrentRowDetail: any;
@@ -33,7 +33,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
   tenderWinnersByCount: any;
   tenderWinnersByCountColumns = ['companyName', 'count'];
-  countTableCurrentRowDetailColumns = ['amount', 'title', 'unitName'];
+  countTableCurrentRowDetailColumns = ['amount', 'title', 'time', 'unitName'];
   countTableCurrentRow: any;
   countTableCurrentRowIdx = 0;
   countTableCurrentRowDetail: any;
@@ -59,13 +59,15 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
         const winner = await this.getTenderWinner(item);
         console.log('winner ', winner);
         const tenderDetail = await this.getTenderDetail(winner);
-        const { displayAmount, amount, detail } = await this.getTenderWinnerDetail(tenderDetail, winner);
+        const { displayAmount, amount, openTime, closeTime, detail } = await this.getTenderWinnerDetail(tenderDetail, winner);
         console.log('winner detail ', detail);
         array.push(
           {
             ...winner,
             amount,
             displayAmount,
+            openTime,
+            closeTime,
             apiResponse: {
               ...winner.apiResponse,
               detail
@@ -151,9 +153,15 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     const amountString = tenderWinnerDetail.detail['決標資料:總決標金額'];
     const winnerAmount = Number( amountString.split('元')[0].split(',').join('') );
 
+    const openTime1 = tenderWinnerDetail.detail['採購資料:開標時間'];
+    const openTime2 = tenderWinnerDetail.detail['已公告資料:開標時間'];
+    const closeTime = tenderWinnerDetail.detail['決標資料:決標日期'];
+
     return {
       displayAmount: amountString,
       amount: winnerAmount,
+      openTime: openTime1? openTime1:openTime2,
+      closeTime,
       detail: tenderWinnerDetail.detail
     };
   }

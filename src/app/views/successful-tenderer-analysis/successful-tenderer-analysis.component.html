@@ -12,7 +12,7 @@
     </span>
     <span>總頁數：{{ totalPages }}</span>
   </p>
-  <h1 *ngIf="isLoading">loading...</h1>
+  <mat-spinner [diameter]="50" *ngIf="isLoading"></mat-spinner>
   <div *ngIf="!isLoading">
     <div class="analysis-result">
       <mat-tab-group (focusChange)="tabChanged($event)">
@@ -52,6 +52,10 @@
                   <ng-container matColumnDef="title">
                     <th mat-header-cell *matHeaderCellDef>標案名稱</th>
                     <td mat-cell *matCellDef="let item">{{ item.apiResponse.brief.title }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="time">
+                    <th mat-header-cell *matHeaderCellDef>開標日<br/>決標日</th>
+                    <td mat-cell *matCellDef="let item">{{ item.openTime }}<br/>{{ item.closeTime }}</td>
                   </ng-container>
                   <ng-container matColumnDef="unitName">
                     <th mat-header-cell *matHeaderCellDef>機關</th>
@@ -104,6 +108,10 @@
                   <ng-container matColumnDef="title">
                     <th mat-header-cell *matHeaderCellDef>標案名稱</th>
                     <td mat-cell *matCellDef="let item">{{ item.apiResponse.brief.title }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="time">
+                    <th mat-header-cell *matHeaderCellDef>開標日<br/>決標日</th>
+                    <td mat-cell *matCellDef="let item">{{ item.openTime }}<br/>{{ item.closeTime }}</td>
                   </ng-container>
                   <ng-container matColumnDef="unitName">
                     <th mat-header-cell *matHeaderCellDef>機關</th>
