@@ -49,12 +49,13 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   }
   async getTenderWinners( data: any ) {
     const array = [];
+    const apiErrorArray = [];
     for (const item of data) {
       if(item.brief.type === '決標公告') {
         const winner = await this.getTenderWinner(item);
         console.log('winner ', winner);
-        const tenderDetail = await this.getTenderDetail(winner);
-        const { displayAmount, amount, openTime, closeTime, detail } = await this.getTenderWinnerDetail(tenderDetail, winner);
+        const tenderDetail = await this.getTenderWinnerDetail(winner);
+        const { displayAmount, amount, openTime, closeTime, detail } = await this.formatTenderWinnerDetail(tenderDetail, winner);
         console.log('winner detail ', detail);
         array.push(
           {
@@ -131,7 +132,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     };
   }
 
-  async getTenderDetail(winner: any) {
+  async getTenderWinnerDetail(winner: any) {
     return lastValueFrom(this.tendersService
       .getPublicationOfTender({
         unitId: winner.apiResponse.unit_id,
@@ -140,7 +141,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     );
   }
 
-  async getTenderWinnerDetail(tenderDetail: any, winner: any) {
+  async formatTenderWinnerDetail(tenderDetail: any, winner: any) {
     const tenderWinnerDetail = tenderDetail.records.find( (recordItem: any) => recordItem.brief.type === winner.apiResponse.brief.type);
     console.log('tenderWinnerDetailHandler',tenderWinnerDetail);
 
