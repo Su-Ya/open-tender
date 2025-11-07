@@ -10,10 +10,10 @@ export class TendersService {
   constructor(private httpClient: HttpClient) { }
 
   getTenders( data: { searchKey: string, page: string } ) {
-    return this.httpClient.get<TTendersApiResponse>(`https://pcc.g0v.ronny.tw/api/searchbytitle?query=${data.searchKey}&page=${data.page}`)
+    return this.httpClient.get<TTendersApiResponse>(`https://pcc-api.openfun.app/api/searchbytitle?query=${data.searchKey}&page=${data.page}`)
   }
 
   getPublicationOfTender( data: { unitId: any, jobNumber: any } ) {
-    return this.httpClient.get(`https://pcc.g0v.ronny.tw/api/tender?unit_id=${data.unitId}&job_number=${data.jobNumber}`)
+    return this.httpClient.get(`https://pcc-api.openfun.app/api/tender?unit_id=${data.unitId}&job_number=${data.jobNumber}`)
   }
 }
