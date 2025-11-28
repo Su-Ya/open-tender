@@ -18,6 +18,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      REPO_NAME: ${{ github.event.repository.name }}
+      PROJECT_NAME: open-tender
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,7 +36,7 @@ jobs:
 
       - name: Build Angular app
         run: |
-          npm run build -- --configuration production --base-href "https://su-ya.github.io/open-tender/"
+          npm run build -- --configuration production --base-href=/${{ env.REPO_NAME }}/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -40,7 +44,7 @@ jobs:
       - name: Upload build output
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist/open-tender  # 👈 這要對應你的 Angular 專案名稱（看 angular.json）
+          path: './dist/${{ env.PROJECT_NAME }}' # 👈 對應 Angular 專案名稱（看 angular.json）
 
   deploy:
     environment:
