@@ -109,33 +109,45 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
           apiErrorArray.push(winner);
         }
         else {
-          const tenderDetail = await this.getTenderWinnerDetail(winner);
-          const { displayAmount, amount, openTime, closeTime, detail } = await this.formatTenderWinnerDetail(tenderDetail, winner);
-          console.log('winner detail ', detail);
-          array.push(
-            {
-              ...winner,
-              amount,
-              displayAmount,
-              openTime,
-              closeTime,
-              apiResponse: {
-                ...winner.apiResponse,
-                detail
-              }
+          const detailPromise = new Promise( async (resolve, reject) => {
+            try {
+              const tenderDetail = await lastValueFrom(this.getTenderWinnerDetailObservable(winner));
+              const { displayAmount, amount, openTime, closeTime, detail } = this.formatTenderWinnerDetail(tenderDetail, winner);
+              console.log('winner detail ', detail);
+              resolve(
+                {
+                  ...winner,
+                  amount,
+                  displayAmount,
+                  openTime,
+                  closeTime,
+                  apiResponse: {
+                    ...winner.apiResponse,
+                    detail
+                  }
+                }
+              );
+            } catch (error) {
+              resolve(null);
             }
-          );
+
+          });
+
+          array.push(detailPromise);
 
         }
-
       }
-
     }
 
-    return array;
+    const results = await Promise.all(array);
+
+    // 過濾掉失敗的 null 結果，並將成功的與錯誤清單合併
+    const successfulResults = results.filter(r => r !== null);
+
+    return successfulResults;
   }
 
-  async getTenderWinner( item: any ) {
+  getTenderWinner( item: any ) {
     console.log('招標列表 api response', item);
     let winner = {
       name: '',
@@ -189,16 +201,15 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
     };
   }
 
-  async getTenderWinnerDetail(winner: any) {
-    return lastValueFrom(this.tendersService
+  getTenderWinnerDetailObservable(winner: any) {
+    return this.tendersService
       .getPublicationOfTender({
         unitId: winner.apiResponse.unit_id,
         jobNumber: winner.apiResponse.job_number,
-      })
-    );
+      });
   }
 
-  async formatTenderWinnerDetail(tenderDetail: any, winner: any) {
+  formatTenderWinnerDetail(tenderDetail: any, winner: any) {
     const tenderWinnerDetail = tenderDetail.records.find( (recordItem: any) => recordItem.brief.type === winner.apiResponse.brief.type);
     console.log('tenderWinnerDetailHandler',tenderWinnerDetail);
 
