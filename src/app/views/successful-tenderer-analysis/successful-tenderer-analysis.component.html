@@ -7,7 +7,7 @@
         type="text"
         [(ngModel)]="searchPage"
         (keyup.enter)="changedPage($event)"
-        [disabled]="isLoading || (tenderWinnersByAmount?.length === 0 && tenderWinnersByCount?.length === 0)"
+        [disabled]="isLoading"
       >，
     </span>
     <span>總頁數：{{ totalPages }}</span>
