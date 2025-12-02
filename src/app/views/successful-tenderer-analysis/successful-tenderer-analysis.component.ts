@@ -38,21 +38,31 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
   }
   fetchTenders() {
     this.isLoading = true;
-    this.tendersService.getTenders({ searchKey: this.searchKey, page: this.searchPage }).subscribe( async result => {
-      this.totalPages = result.total_pages;
-      this.tenders = result.records;
-      this.tenderWinners = await this.getTenderWinners(this.tenders);
-      this.sortTenderWinnersByAmount();
-      this.isLoading = false;
-      console.log('-----------------------', this.tenderWinners);
-    });
+    this.tendersService
+    .getTenders({ searchKey: this.searchKey, page: this.searchPage })
+    .subscribe(
+      async (result) => {
+        this.totalPages = result.total_pages;
+        this.tenders = result.records;
+        this.tenderWinners = await this.getTenderWinners(this.tenders);
+        this.sortTenderWinnersByAmount();
+        this.isLoading = false;
+        console.log('-----------------------', this.tenderWinners);
+      },
+      (error) => {
+        console.error('Error fetching tenders:', error);
+        this.isLoading = false;
+        alert('伺服器忙碌中，請稍後再試');
+      }
+    );
   }
+
   async getTenderWinners( data: any ) {
     const array = [];
     const apiErrorArray = [];
     for (const item of data) {
       if(item.brief.type === '決標公告') {
-        const winner = await this.getTenderWinner(item);
+        const winner = this.getTenderWinner(item);
         console.log('winner ', winner);
         if(
           (winner.apiResponse.date === 20230118 &&
