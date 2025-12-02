@@ -59,83 +59,35 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
   async getTenderWinners( data: any ) {
     const array = [];
-    const apiErrorArray = [];
     for (const item of data) {
       if(item.brief.type === '決標公告') {
         const winner = this.getTenderWinner(item);
         console.log('winner ', winner);
-        if(
-          (winner.apiResponse.date === 20230118 &&
-            winner.apiResponse.brief.title === '「112年客家新聞蒐整通報及輿情分析」勞務採購案') ||
-          (winner.apiResponse.date === 20230107 &&
-            winner.apiResponse.brief.title === '新聞即時輿情蒐報整合系統') ||
-          (winner.apiResponse.date === 20230107 &&
-            winner.apiResponse.brief.title === '臺東縣政府112年度新聞輿情監測及分析計畫勞務採購案') ||
-          (winner.apiResponse.date === 20230106 &&
-            winner.apiResponse.brief.title === '112年電視新聞輿情蒐報服務案') ||
-          (winner.apiResponse.date === 20230103 &&
-            winner.apiResponse.brief.title === '112年度新北市電視新聞輿情蒐集及通報服務案') ||
-          (winner.apiResponse.date === 20221230 &&
-            winner.apiResponse.brief.title === '行政院「112年重大輿情、災害通報及行政院院長電視新聞蒐報」 採購案') ||
-          (winner.apiResponse.date === 20221229 &&
-            winner.apiResponse.brief.title === '每日國內新聞輿情蒐整業務承攬委外案') ||
-          (winner.apiResponse.date === 20221228 &&
-            winner.apiResponse.brief.title === '112年網路輿情分析暨整合行銷服務案') ||
-          (winner.apiResponse.date === 20221223 &&
-            winner.apiResponse.brief.title === '112年新聞輿情剪輯服務') ||
-          (winner.apiResponse.date === 20221220 &&
-            winner.apiResponse.brief.title === '112年「新聞輿情監測及分析」勞務採購案') ||
-          (winner.apiResponse.date === 20221215 &&
-            winner.apiResponse.brief.title === '112年度網路輿情分析及災情介接') ||
-          (winner.apiResponse.date === 20221214 &&
-            winner.apiResponse.brief.title === '文化部112年度輿情蒐集通報勞務採購案') ||
-          (winner.apiResponse.date === 20221214 &&
-            winner.apiResponse.brief.title === '「 112 年媒體輿情蒐集」委託專業服務') ||
-          (winner.apiResponse.date === 20221208 &&
-            winner.apiResponse.brief.title === '112年輿情蒐報及回應處理委託承攬計畫') ||
-          (winner.apiResponse.date === 20221206 &&
-            winner.apiResponse.brief.title === '「111年度電視暨平面新聞輿情蒐報服務」勞務採購案-第一次變更契約') ||
-          (winner.apiResponse.date === 20221101 &&
-            winner.apiResponse.brief.title === '112年輿情監測服務案（後續擴充）') ||
-          (winner.apiResponse.date === 20221028 &&
-            winner.apiResponse.brief.title === '112年度新北市政府數位化輿情系統服務案') ||
-          (winner.apiResponse.date === 20220812 &&
-            winner.apiResponse.brief.title === '輿情分析應用平台採購') ||
-          (winner.apiResponse.date === 20220708 &&
-            winner.apiResponse.brief.title === '111年度氣象輿情分析服務案') ||
-          (winner.apiResponse.date === 20220630 &&
-            winner.apiResponse.brief.title === '111年屏東縣新聞輿情即時通報服務採購案')
-        ) {
-          apiErrorArray.push(winner);
-        }
-        else {
-          const detailPromise = new Promise( async (resolve, reject) => {
-            try {
-              const tenderDetail = await lastValueFrom(this.getTenderWinnerDetailObservable(winner));
-              const { displayAmount, amount, openTime, closeTime, detail } = this.formatTenderWinnerDetail(tenderDetail, winner);
-              console.log('winner detail ', detail);
-              resolve(
-                {
-                  ...winner,
-                  amount,
-                  displayAmount,
-                  openTime,
-                  closeTime,
-                  apiResponse: {
-                    ...winner.apiResponse,
-                    detail
-                  }
+        const detailPromise = new Promise( async (resolve, reject) => {
+          try {
+            const tenderDetail = await lastValueFrom(this.getTenderWinnerDetailObservable(winner));
+            const { displayAmount, amount, openTime, closeTime, detail } = this.formatTenderWinnerDetail(tenderDetail, winner);
+            console.log('winner detail ', detail);
+            resolve(
+              {
+                ...winner,
+                amount,
+                displayAmount,
+                openTime,
+                closeTime,
+                apiResponse: {
+                  ...winner.apiResponse,
+                  detail
                 }
-              );
-            } catch (error) {
-              resolve(null);
-            }
+              }
+            );
+          } catch (error) {
+            resolve(null);
+          }
 
-          });
+        });
 
-          array.push(detailPromise);
-
-        }
+        array.push(detailPromise);
       }
     }
 
