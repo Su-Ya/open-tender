@@ -1,7 +1,7 @@
 # OpenTender
 
 ## Demo
-[demo](https://su-ya.github.io/open-tender/successful-tenderer-analysis)
+[demo](https://su-ya.github.io/open-tender)
 
 ## 描述
 用輿情標案資料，對「得標廠商」做
@@ -11,4 +11,4 @@
 
 
 ## API 來源
-https://ronnywang.github.io/pcc-viewer/index.html
+https://openfunltd.github.io/pcc-viewer/index.html
