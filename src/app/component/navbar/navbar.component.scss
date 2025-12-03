@@ -16,12 +16,18 @@ nav {
 nav {
   padding: 0 1rem;
   letter-spacing: 1.5px;
-  a {
-    display: inline-block;
-    padding: 10px;
-  }
-  a + a {
-    margin-left: 1.5rem;
+  .navbar-items {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    a {
+      padding: 10px;
+    }
+    .octicon {
+      display: inline-block;
+      margin-left: -5px;
+      vertical-align: sub;
+    }
   }
   h1 {
     margin: 0;
@@ -29,15 +35,22 @@ nav {
 }
 
 nav {
-  a {
-    color: white;
-    text-decoration: none;
-  }
-  a:hover, .nav-item-active {
-    color: #1976d2;
-    background-color: white;
-    border-radius: .5rem;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 17px rgba(0, 0, 0, .35);
+  .navbar-items {
+    a {
+      color: white;
+      text-decoration: none;
+    }
+    .octicon {
+      fill: white;
+    }
+    a:hover, .nav-item-active {
+      color: #1976d2;
+      background-color: white;
+      border-radius: .5rem;
+      box-shadow: 0 4px 17px rgba(0, 0, 0, .35);
+      .octicon {
+        fill: #1976d2;
+      }
+    }
   }
 }
