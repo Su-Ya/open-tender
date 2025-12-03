@@ -291,7 +291,7 @@ export class SuccessfulTendererAnalysisComponent implements OnInit {
 
   openTenderDetailPage(item: any) {
     console.log('openTenderDetailPage: ',item);
-    const url = `https://ronnywang.github.io/pcc-viewer/tender.html?unit_id=${item.apiResponse.unit_id}&job_number=${item.apiResponse.job_number}&date=${item.apiResponse.date}&filename=${item.apiResponse.filename}`;
+    const url = `https://openfunltd.github.io/pcc-viewer/tender.html?unit_id=${item.apiResponse.unit_id}&job_number=${item.apiResponse.job_number}&date=${item.apiResponse.date}&filename=${item.apiResponse.filename}`;
     window.open(url, '_blank');
   }
 
