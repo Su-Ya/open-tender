@@ -23,7 +23,7 @@ nav {
     a {
       padding: 10px;
     }
-    .octicon {
+    .octicon-link-external {
       display: inline-block;
       margin-left: -5px;
       vertical-align: sub;
@@ -40,7 +40,7 @@ nav {
       color: white;
       text-decoration: none;
     }
-    .octicon {
+    .octicon-link-external {
       fill: white;
     }
     a:hover, .nav-item-active {
@@ -48,7 +48,7 @@ nav {
       background-color: white;
       border-radius: .5rem;
       box-shadow: 0 4px 17px rgba(0, 0, 0, .35);
-      .octicon {
+      .octicon-link-external {
         fill: #1976d2;
       }
     }
