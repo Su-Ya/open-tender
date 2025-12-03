@@ -17,6 +17,11 @@
     }
     th, td {
       padding: 0 24px;
+      .octicon-link-external {
+        display: inline-block;
+        vertical-align: sub;
+        fill: gray;
+      }
     }
     .sort-table {
       tr:hover, .actived {
